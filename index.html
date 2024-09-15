@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="https://getfirebug.com/firebug-lite-debug.js"></script>
+    <meta name="description" content="CS4406 Computer Graphics - Assignment #2" />
+    <meta charset="utf-8" />
+    <title>Assignment 2</title>
+
+    <meta charset=utf-8 />
+    <title> CS4406 Computer Graphics - ProgrammingAsignment U#2 </title>
+
+    <style id="jsbin-css">
+    </style>
+</head>
+<body>
+<div id="container">
+</div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.5/dat.gui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/94/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.2.1/math.min.js"></script>
+<script type="text/javascript"></script>
+<script>
+
+    // set the scene size
+    var WIDTH = 500, HEIGHT = 500;
+    // set some camera attributes
+    var VIEW_ANGLE = 45, ASPECT = WIDTH / HEIGHT, NEAR = 1, FAR = 1000;
+    // get the element to attach
+    var $container = $('#container');
+    // create a WebGL renderer, camera, and a scene
+    var renderer = new THREE.WebGLRenderer();
+    var scene = new THREE.Scene();
+    var clock = new THREE.Clock();
+    var camera = new THREE.PerspectiveCamera(VIEW_ANGLE,ASPECT,NEAR,FAR);
+    // the camera starts at 0,0,0 so pull it back
+    camera.position.z = 30;
+    // add the camera to the scene
+    scene.add(camera)
+    // set up the camera controls.  Please keep in mind that what this does is move the entire scene around.
+    // because the entire scene is moving the position of the camera and lights in relation to objects within
+    // the scene doesn't change so the lighting on the surface of the object(s) will not change either
+
+    // start the renderer
+    renderer.setSize(WIDTH, HEIGHT);
+    document.body.appendChild(renderer.domElement);
+
+    // attach the render-supplied DOM element
+    $container.append(renderer.domElement);
+    // ----------------------------------------------------------------------------------------
+    //  END OF THE STANDARD CODE FOR THE ASSIGNMENT
+    // ----------------------------------------------------------------------------------------
+
+    ///////////////////////////
+    // START OF STUDENT CODE //
+    ///////////////////////////
+
+    // Create a new geometry object which will hold the vertices and faces of the pentagon
+    let geometry = new THREE.Geometry();
+
+    // Define the radius of the pentagon's circumscribed circle (distance from the center to a vertex)
+    let radius = 10;
+
+    // Loop 5 times to calculate the 5 vertices of the pentagon
+    for (let i = 0; i < 5; i++) {
+        // Calculate the angle for the current vertex
+        let angle = (i / 5) * 2 * Math.PI;
+
+        // Calculate the x coordinate of the vertex based on the angle and radius
+        let x = radius * Math.cos(angle);
+
+        // Calculate the y coordinate of the vertex based on the angle and radius
+        let y = radius * Math.sin(angle);
+
+        // Add the vertex to the geometry as a THREE.Vector3 object
+        // (z is 0 because the pentagon is flat on the xy-plane)
+        geometry.vertices.push(new THREE.Vector3(x, y, 0));
+    }
+
+    // A pentagon can be formed out of 3 triangles based on the 5 vertices
+    geometry.faces.push(new THREE.Face3(0, 1, 2)); // First triangle
+    geometry.faces.push(new THREE.Face3(0, 2, 3)); // Second triangle
+    geometry.faces.push(new THREE.Face3(0, 3, 4)); // Third triangle
+
+    // Create a basic material with a red color on both sides for the pentagon
+    let material = new THREE.MeshBasicMaterial({ color: 0xFF0000, side: THREE.DoubleSide });
+
+    // Combine the geometry and material into a mesh (a drawable 3D object) and add it to the scene
+    let pentagon = new THREE.Mesh(geometry, material);
+    scene.add(pentagon);
+
+    // Add axes helper to the scene
+    let axesHelper = new THREE.AxesHelper(20); // Length of the axes is 20 units
+    scene.add(axesHelper);
+
+    // Add grid helper to the scene
+    let gridHelper = new THREE.GridHelper(30, 20); // Size of the grid and number of divisions
+    scene.add(gridHelper);
+
+    camera.position.set(30, 30, 30); // Set the camera position to an oblique angle for better viewing
+    camera.lookAt(0, 0, 0); // Make the camera look at the origin (0, 0, 0)
+
+    // The UoPeople-supplied render() method expects 'cameraControls' to exist
+    const cameraControls = {
+        update: function () {} // This is a placeholder method that does nothing
+    };
+
+    // Define the animation loop function
+    function animate() {
+        // Queue the next frame of the animation
+        requestAnimationFrame(animate);
+
+        // Rotate the pentagon slightly around the x-axis for this frame
+        pentagon.rotation.x += 0.01;
+
+        // Rotate the pentagon slightly around the y-axis for this frame
+        pentagon.rotation.y += 0.01;
+
+        // Render the current frame to the screen
+        render();
+    }
+
+    // Start the animation loop
+    animate();
+
+    /////////////////////////
+    // END OF STUDENT CODE //
+    /////////////////////////
+
+    // ----------------------------------------------------------------------------------------
+    // END OF YOUR CUSTOM CODE FOR THE ASSIGNMENT
+    // The rendering functions that follow are standard and can be used for this assignment.
+    // You are welcome to customize them or create your own if you desire, however, you can
+    // simply use the code provided.
+
+
+    // Standard functions for rendering the scene.  Notice how we have the animate function
+    // which submits a call to requestAnimationFrame to call animate.   This creates a loop
+    // that will render the scene again whenever something within the scene changes.
+    // Standard functions for rendering the scene.  Notice how we have the animate function
+    // which submits a call to requestAnimationFrame to call animate.   This creates a loop
+    // that will render the scene again whenever something within the scene changes.
+
+
+
+    function render() {
+        cameraControls.update();
+        renderer.render(scene, camera);
+    }
+</script>
+</html>
