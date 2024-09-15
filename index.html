@@ -90,16 +90,18 @@
     let pentagon = new THREE.Mesh(geometry, material);
     scene.add(pentagon);
 
-    // Add axes helper to the scene
+    // Add axes helper to the scene for better orientation
     let axesHelper = new THREE.AxesHelper(20); // Length of the axes is 20 units
     scene.add(axesHelper);
 
-    // Add grid helper to the scene
+    // Add grid helper to the scene for better visual reference of the plane
     let gridHelper = new THREE.GridHelper(30, 20); // Size of the grid and number of divisions
     scene.add(gridHelper);
 
-    camera.position.set(30, 30, 30); // Set the camera position to an oblique angle for better viewing
-    camera.lookAt(0, 0, 0); // Make the camera look at the origin (0, 0, 0)
+    // Set the camera position to an oblique angle for better viewing of the 3D object
+    camera.position.set(30, 30, 30);
+    // Make the camera look at the origin (0, 0, 0) where the pentagon is located
+    camera.lookAt(0, 0, 0);
 
     // The UoPeople-supplied render() method expects 'cameraControls' to exist
     const cameraControls = {
